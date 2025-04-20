@@ -154,7 +154,7 @@ public class RemoveAnnotationVisitor extends JavaIsoVisitor<ExecutionContext> {
                 Expression expression = assignment.getAssignment();
                 maybeRemoveImportFromExpression(expression);
             } else {
-                maybeRemoveImport(TypeUtils.asFullyQualified(argument.getType()));
+                maybeRemoveImportFromExpression(argument);
             }
         });
     }
@@ -169,7 +169,10 @@ public class RemoveAnnotationVisitor extends JavaIsoVisitor<ExecutionContext> {
             if (fieldType != null) {
                 maybeRemoveImport(TypeUtils.asFullyQualified(fieldType.getOwner()));
             }
-        } else {
+        } else { 
+            if (expression instanceof J.Annotation) {
+                maybeRemoveAnnotationParameterImports((J.Annotation) expression);
+            }
             maybeRemoveImport(TypeUtils.asFullyQualified(expression.getType()));
         }
     }
